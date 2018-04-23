@@ -12,7 +12,7 @@ $data = array(
     'sex'  => 1,
     'addr' => '白云区白云山'
 );
-echo json_encode($data);   
+echo json_encode($data);    
 
 $arr = array(
     array('id' => 1, 'name' => 'aupl1'),

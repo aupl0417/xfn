@@ -2,42 +2,44 @@
 /**
  * Created by PhpStorm.
  * User: liaozijie
- * Date: 2018-04-23
- * Time: 16:11
+ * Date: 2018-04-25
+ * Time: 9:28
  */
 
-namespace app\api\controller\ad\v1;
-use think\controller\Rest;
-use think\Request;
+namespace app\api\controller\v1\Screen;
 
-class News extends Rest
+use app\api\controller\v1\Home;
+use think\Controller;
+use think\Db;
+class Activity extends Home
 {
-    public function rest(){
-        $id = input('id', 0, 'intval');
+    public function index(){
+//        $id = input('id', 0, 'intval');
         $method = request()->method();
         switch (strtolower($method)){
             case 'get':     //查询
-                $this->read($id);
+                $this->read();
                 break;
             case 'post':    //新增
                 $this->add();
                 break;
             case 'put':     //修改
-                $this->update($id);
+                $this->update();
                 break;
             case 'delete':  //删除
-                $this->delete($id);
+                $this->delete();
                 break;
 
         }
     }
-    public function read($id){
-//        $model = model('News');
-        //$data = $model::get($id)->getData();
-        //$model = new NewsModel();
-//        $data=$model->where('id', $id)->find();// 查询单个数据
-        $data = array('status' => 'read');
-        return apiReturn(200, $data);
+
+    /*
+     * 获取活动列表
+     * */
+    public function read(){
+        $model = model('Activity');
+        $data  = $model->getActivityList();
+        return $this->apiReturn(200, $data);
     }
 
     public function add(){
@@ -60,8 +62,9 @@ class News extends Rest
 //            return json(["status"=>0]);
 //        }
         $data = array('status' => 'update');
-        return apiReturn(200, $data);
+        return $this->apiReturn(200, $data);
     }
+    
     public function delete($id){
 
         /*$model = model('News');
@@ -72,6 +75,6 @@ class News extends Rest
             return json(["status"=>0]);
         }*/
         $data = array('status' => 'delete');
-        return apiReturn(200, $data);
+        return $this->apiReturn(200, $data);
     }
 }

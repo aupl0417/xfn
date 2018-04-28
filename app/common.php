@@ -29,3 +29,29 @@ function apiReturn($code, $data = null, $msg = ''){
 
     exit(json_encode($jsonData));
 }
+
+
+//得到高强度不可逆的加密字串
+function getSuperMD5($str) {
+    return MD5(SHA1($str) . '@$^^&!##$$%%$%$$^&&asdtans2g234234HJU');
+}
+
+function checkPhone($phone){
+    if(!preg_match_all("/^1([358][0-9]|4[579]|66|7[0135678]|9[89])[0-9]{8}$/", $phone, $array)){
+        return false;
+    }
+    return true;
+}
+
+function checkEmail($email){
+    return preg_match("/^([0-9A-Za-z\\-_\\.]+)@([0-9a-z]+\\.[a-z]{2,3}(\\.[a-z]{2})?)$/i", $email);
+}
+
+/*
+ * 生成单号
+ * */
+function makeOrder(){
+    $order = date('YmdHis');
+    $array = explode('.', microtime(true));
+    return $order . end($array);
+}

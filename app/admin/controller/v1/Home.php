@@ -6,7 +6,7 @@
  * Time: 9:28
  */
 
-namespace app\api\controller\v1;
+namespace app\admin\controller\v1;
 
 use think\Controller;
 use think\Db;
@@ -31,15 +31,6 @@ class Home extends Controller {
         if(!$this->tokenValidate($params, $token)){
             $this->apiReturn(201, $this->newSign);//暂时显示这个签名，用于测试时
             $this->apiReturn(201, '签名错误');
-        }
-
-        $controller = request()->controller();
-        $controller = explode('.', $controller);
-        $workController = ['SellerManage', 'ShopManage', 'CarManage', 'ActivityManage', 'Order'];
-        if(in_array($controller[1], $workController)){
-            (!isset($params['userId']) || empty($params['userId'])) && $this->apiReturn(201, '', '用户ID不能为空');
-            $member = model('Member')->getMemberById($params['userId']);
-            !$member && $this->apiReturn(201, '', '用户不存在');
         }
 
         $this->data = $params;

@@ -1,5 +1,5 @@
 <?php
-namespace app\admin\controller;
+namespace app\admin\controller\v1;
 
 use think\Controller;
 use think\Db;
@@ -7,24 +7,20 @@ use think\Exception;
 use think\Request;
 use think\Session;
 
-class Login extends Controller {
+class Index extends Controller {
 
     public function index(){
-        return $this->fetch();
-    }
-
-    public function doLogin(){
         if(Request::instance()->isPost()){
-            $data['UserName'] = input('username', '', 'trim');
-            $data['Password'] = input('password', '', 'trim');
+            $data['username'] = input('username', '', 'trim');
+            $data['username'] = input('password', '', 'trim');
 
             try{
-                $result = $this->validate($data, 'Login1');
+                $result = $this->validate($data, 'Login');
 
                 if(true !== $result){
                     throw new Exception($result, 1);
                 }
-//                dump($data);die;
+                dump($data);die;
                 $user = Db::table('xfn_member')->where(['user_login' => $data['UserName']])->find();
                 if(!$user){
                     throw new Exception('用户不存在', 2);

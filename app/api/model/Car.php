@@ -56,4 +56,17 @@ class Car extends Model
         }
         return $data;
     }
+
+    public function getCarList($where, $field = '*', $page = 1, $pageSize = 10){
+        $data = Db::name($this->table)->where($where)->field($field)->join('car_info', 'ac_cid=c_id', 'left')->page($page, $pageSize)->select();
+        if($data){
+            foreach($data as $key => &$value){
+                if(isset($value['createTime'])){
+                    $value['createTime'] = date('Y-m-d H:i:s', $value['createTime']);
+                }
+            }
+        }
+        
+        return $data;
+    }
 }

@@ -5,7 +5,7 @@
  * Date: 2017/7/14 0014
  * Time: 13:39
  */
-namespace app\admin\validate;
+namespace app\api\validate;
 use think\Validate;
 
 

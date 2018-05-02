@@ -28,4 +28,16 @@ class Activity extends Model
         $field = 'a_id as id,a_name as name,a_type as type,a_content as content,a_description as description';
         return Db::name($this->table)->field($field)->where(['a_isDelete' => 0])->limit($limit)->select();
     }
+
+    public function getActivityData($where, $field = '*', $page = 1, $pageSize = 10){
+        $data = Db::name($this->table)->where($where)->field($field)->page($page, $pageSize)->select();
+        if($data){
+            $typeArr = ['海报', '视频'];
+            foreach($data as $key => &$value){
+                $value['type'] = $typeArr[$value['type']];
+                $value['createTime'] = date('Y-m-d H:i:s', $value['createTime']);
+            }
+        }
+        return $data;
+    }
 }

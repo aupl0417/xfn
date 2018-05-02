@@ -74,6 +74,7 @@ class Index extends Home
 
         $type   = $this->data['type'] + 0;
         $userId = $this->data['userId'] + 0;
+        $keyword= isset($this->data['keyword']) ? trim($this->data['keyword']) : '';
         $page   = input('page', 1, 'intval');
 
         !in_array($type, [0, 1, 2]) && $this->apiReturn(201, '', '分销员类型非法');
@@ -88,10 +89,32 @@ class Index extends Home
         if(in_array($type, [0, 1])){//店长或分销员
             $where = ['bo_shopId' => $seller['s_shopId']];
         }
+
+        if($keyword){
+            if(checkPhone($keyword)){
+                $where['bo_phone'] = $keyword;
+            }else{
+                if(substr_count($keyword, ' ') > 3){
+                    $ids = Db::name('car_info')->where('c_name', 'like', '%' . $keyword . '%')->join('car', 'ac_cid=c_id', 'left')->field('ac_id')->select();
+                    if($ids){
+                        $ids = array_column($ids, 'ac_id');
+                        $ids = implode(',', $ids);
+                        $where['bo_cid'] = ['in', $ids];
+                    }
+                }else{
+                    $wids = Db::name('wechat_info')->where('w_nickname', 'like', '%' . $keyword . '%')->field('w_id')->select();
+                    if($wids){
+                        $wids = array_column($wids, 'w_id');
+                        $wids = implode(',', $wids);
+                        $where['bo_wid'] = ['in', $wids];
+                    }
+                }
+            }
+        }
+
         $model  = model('BusinessOpportunity');
         $field  = '';
         $data   = $model->getDataList($where, $field, $page);
-
         $this->apiReturn(200, $data);
     }
 

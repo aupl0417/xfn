@@ -41,11 +41,11 @@ class Index extends Home {
      * @return json
      * */
     public function add(){
-        (!isset($this->data['type'])      || is_null($this->data['type'])) && $this->apiReturn(201, '', '车辆类型非法');
+        (!isset($this->data['type'])     || is_null($this->data['type'])) && $this->apiReturn(201, '', '车辆类型非法');
         (!isset($this->data['brandId'])  || empty($this->data['brandId'])) && $this->apiReturn(201, '', '请选择车辆品牌');
-        (!isset($this->data['familyId'])     || empty($this->data['familyId'])) && $this->apiReturn(201, '', '请选择车系');
-        (!isset($this->data['carId'])     || empty($this->data['carId'])) && $this->apiReturn(201, '', '请选择车型');
-        (!isset($this->data['styleId'])     || empty($this->data['styleId'])) && $this->apiReturn(201, '', '请选择车款式');
+        (!isset($this->data['familyId']) || empty($this->data['familyId'])) && $this->apiReturn(201, '', '请选择车系');
+        (!isset($this->data['carId'])    || empty($this->data['carId'])) && $this->apiReturn(201, '', '请选择车型');
+        (!isset($this->data['styleId'])  || empty($this->data['styleId'])) && $this->apiReturn(201, '', '请选择车款式');
 
         $type = $this->data['type'] + 0;
 
@@ -57,22 +57,13 @@ class Index extends Home {
             (!isset($this->data['soldPrice'])     || empty($this->data['soldPrice'])) && $this->apiReturn(201, '', '请输入销售价格');
         }
 
-        $carId = $this->data['carId'] + 0;
-        $brandId = $this->data['brandId'] + 0;
-
-        $count = Db::name('car')->where(['ac_cid' => ])
-        if($count){
-
-        }
-
         $data = [
-            'ac_cid'  => $this->data['carId'] + 0,
+            'ac_cid'        => $this->data['carId'] + 0,
             'ac_soldPrice'  => isset($this->data['soldPrice']) ? $this->data['soldPrice'] + 0 : 0,
-            'ac_createId'    => $this->data['userId'] + 0,
+            'ac_createId'   => $this->data['userId'] + 0,
             'ac_createTime' => time(),
-            'ac_updateTime' => time(),
             'ac_hasCar'     => $type == 1 ? 1 : 0,
-            'ac_isNewCar'   => $type == 2 ? 1 : 0,
+            'ac_isNewCar'   => $type == 2 ? 0 : 1,
             'ac_num'        => isset($this->data['num']) ? $this->data['num'] + 0 : 0,
             'ac_boughtTime' => isset($this->data['boughtTime']) ? trim($this->data['boughtTime']) : '',
             'ac_mileage'    => isset($this->data['mileage']) ? strip_tags($this->data['mileage']) : 0
@@ -92,10 +83,10 @@ class Index extends Home {
      * @return json
      * */
     public function edit(){
-        (!isset($this->data['id'])      || is_null($this->data['id'])) && $this->apiReturn(201, '', '活动ID非法');
-        (!isset($this->data['type'])      || is_null($this->data['type'])) && $this->apiReturn(201, '', '销售员类型非法');
+        (!isset($this->data['id'])    || is_null($this->data['id'])) && $this->apiReturn(201, '', '活动ID非法');
+        (!isset($this->data['type'])  || is_null($this->data['type'])) && $this->apiReturn(201, '', '销售员类型非法');
         (!isset($this->data['name'])  || empty($this->data['name'])) && $this->apiReturn(201, '', '请输入活动名称');
-        (!isset($this->data['url'])     || empty($this->data['url'])) && $this->apiReturn(201, '', '请上传文件');
+        (!isset($this->data['url'])   || empty($this->data['url'])) && $this->apiReturn(201, '', '请上传文件');
 
         !filter_var($this->data['url'], FILTER_VALIDATE_URL) && $this->apiReturn(201, '', '上传地址非法');
 

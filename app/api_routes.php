@@ -66,3 +66,15 @@ Route::post('work_v1/order/edit','api/v1.Order.Index/edit');
 
 //车辆管理
 Route::get('work_v1/car','api/v1.CarManage.Index/index');
+Route::post('work_v1/car/add','api/v1.CarManage.Index/add');
+
+//门店管理
+Route::get('work_v1/shop','api/v1.ShopManage.Index/index');
+Route::post('work_v1/shop/add','api/v1.ShopManage.Index/add');
+
+//公共接口
+Route::post('common_v1/area','api/v1.Common/area');
+Route::post('common_v1/upload','api/v1.Common/upload');
+Route::get('common_v1/qcode','api/v1.Common/qcode');
+
+Route::post('car_v1/scan','api/v1.Screen.Scan/callback');

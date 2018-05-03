@@ -97,7 +97,7 @@ return [
     // 域名部署
     'url_domain_deploy'      => true,
     // 域名根，如thinkphp.cn
-    'url_domain_root'        => 'xfn.com',
+    'url_domain_root'        => 'xfnauto.com',
     // 是否自动转换URL中的控制器和操作名
     'url_convert'            => true,
     // 默认的访问控制器层
@@ -206,7 +206,7 @@ return [
         'var_session_id' => '',
         // SESSION 前缀
         'prefix'         => 'xfn_',
-        'domain'         => 'xfn.com',
+        'domain'         => 'xfnauto.com',
         // 驱动方式 支持redis memcache memcached
         'type'           => '',
         // 是否自动开启 SESSION
@@ -224,7 +224,7 @@ return [
         // cookie 保存路径
         'path'      => '/',
         // cookie 有效域名
-        'domain'    => 'xfn.com',
+        'domain'    => 'xfnauto.com',
         //  cookie 启用安全传输
         'secure'    => false,
         // httponly设置
@@ -243,4 +243,14 @@ return [
     //CRC加密串
     'md5_crc'       => '&98&kU&D(7%$^aldLAIRld-f$3<>21%~!W@lQ#`',
     'md5_pwd'       => 'lzero&%*%$#()(*&`iLonG?><^%$#@!~+_:JuLkGJuC',
+
+
+    'qiniu'    => [
+        'accesskey' => 'kHuoywSGq_16RchDS9bXQgWXTlHNCG5XnOF3tJba',
+        'secretkey' => 'KqovkLXhX1-NyqQCKVBmJgOj0dfsYHoJ7hRtn1hM',
+        'bucket'    => 'aupl0401',//上传的空间
+        'domain'    =>'oimslmq8z.bkt.clouddn.com',//空间绑定的域名
+        'pipeline'  =>'avvod-pipeline'//空间绑定的域名
+    ],
+
 ];

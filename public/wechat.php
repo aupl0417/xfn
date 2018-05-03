@@ -80,24 +80,40 @@ class wechatCallbackapiTest
         switch ($object->Event)
         {
             case "subscribe":
-                $content = "　　1、查询天气 回复 天气#城市
-       2、查看图文，回复'图文'
-       3、查看多图文,回复'多图文'
-       4、听音乐,回复'音乐'
-       5、查看周围信息，点击'位置'按钮";
-                //$content = "欢迎关注BTE APP ";
-                //$content .= (!empty($object->EventKey))?("\n来自二维码场景 ".str_replace("qrscene_","",$object->EventKey)):"";
-                //$content = array();
-                //$content[] = array("Title"=>"多图文1标题", "Description"=>"", "PicUrl"=>"http://discuz.comli.com/weixin/weather/icon/cartoon.jpg", "Url" =>"http://m.cnblogs.com/?u=txw1958");
-                //$content[] = array("Title"=>"多图文2标题", "Description"=>"", "PicUrl"=>"http://d.hiphotos.bdimg.com/wisegame/pic/item/f3529822720e0cf3ac9f1ada0846f21fbe09aaa3.jpg", "Url" =>"http://m.cnblogs.com/?u=txw1958");
-                //$content[] = array("Title"=>"多图文3标题", "Description"=>"", "PicUrl"=>"http://g.hiphotos.bdimg.com/wisegame/pic/item/18cb0a46f21fbe090d338acc6a600c338644adfd.jpg", "Url" =>"http://m.cnblogs.com/?u=txw1958");
+                $data = [
+                    'id' => $object->EventKey,
+                    'openid' => $object->FromUserName,
+                    'appId'  => 1,
+                ];
 
+                $data['token'] = $this->sign($data);
+
+                $url = 'http://php.xfnauto.com/car_v1/scan';
+
+                $userInfo = $this->fetchUrl_POST($url, $data);
+                $userInfo = json_decode($userInfo, true);
+                $content = "终于等到您！我们的客服人员会尽快联系您！";
                 break;
             case "unsubscribe":
                 $content = "取消关注";
                 break;
             case "SCAN":
-                $content = "扫描场景 ".$object->EventKey;
+                
+                $data = [
+                    'id' => $object->EventKey,
+                    'openid' => $object->FromUserName,
+                    'appId'  => 1,
+                ];
+                
+                $data['token'] = $this->sign($data);
+
+                $url = 'http://php.xfnauto.com/car_v1/scan';
+                
+                $userInfo = $this->fetchUrl_POST($url, $data);
+                $userInfo = json_decode($userInfo, true);
+
+                $content = "终于等到您！我们的客服人员会尽快联系您！";
+
                 break;
             case "CLICK":
                 switch ($object->EventKey)
@@ -427,10 +443,40 @@ $item_str
             sae_set_display_errors(true);
         }else if($_SERVER['REMOTE_ADDR'] != "127.0.0.1"){ //LOCAL
             $max_size = 10000;
-            $log_filename = "./log.txt";
+            $log_filename = "log.txt";
             if(file_exists($log_filename) and (abs(filesize($log_filename)) > $max_size)){unlink($log_filename);}
             file_put_contents($log_filename, date('H:i:s')." ".$log_content."\r\n", FILE_APPEND);
         }
+    }
+
+    function sign($data){
+        $app  = array(
+            '1' => 'D8OZLSE2NEDC0FR4XTGBKHY67UJZ8IK9', //ios
+            '2' => 'DFHGKZLSE2NFDEHGFHHR4XTGBKHY67EJZ8IK9', //安卓
+        );
+
+        $secretKey = $app[$data['appId']];
+        ksort($data);
+
+        return md5($this->http_build_string($data) . $secretKey);
+    }
+
+    /**
+     * 跟系统的http_build_str()功能相同，但不用安装pecl_http扩展
+     *
+     * @param array $array      需要组合的数组
+     * @param string $separator 连接符
+     *
+     * @return string               连接后的字符串
+     * eg: 举例说明
+     */
+    function http_build_string ( $array, $separator = '&' ) {
+        $string = '';
+        foreach ( $array as $key => $val ) {
+            $string .= "{$key}={$val}{$separator}";
+        }
+        //去掉最后一个连接符
+        return substr( $string, 0, strlen( $string ) - strlen( $separator ) );
     }
 }
 ?>

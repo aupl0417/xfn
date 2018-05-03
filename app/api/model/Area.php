@@ -12,29 +12,25 @@ use think\Cache;
 use think\Db;
 use think\Model;
 
-class Brand extends Model
+class Area extends Model
 {
 
-    protected $table = 'car_brand';
+    protected $table = 'area';
 
-    public function getActivityById($id){
+    public function getAreaById($id){
         if(empty($id) || !is_numeric($id)){
             return false;
         }
 
-        return Db::name($this->table)->field('')->where(['a_id' => $id])->find();
+        return Db::name($this->table)->where(['a_id' => $id])->find();
     }
 
-    public function getBrandList(){
-        $cacheKey = md5('brand_list');
+    public function getAreaList($pid = 0){
+        $cacheKey = md5('area_list_' . $pid);
+        cache($cacheKey, null);
         if(!$data = cache($cacheKey)){
-            $field = 'cb_id as id,cb_name as name,cb_code as code,cb_initial as initial,cb_image as image';
-            $res   = Db::name($this->table)->field($field)->order('cb_initial asc')->select();
-            if($res){
-                foreach($res as $key => $val){
-                    $data[$val['initial']][] = $val;
-                }
-            }
+            $field = 'a_id as id,a_name as name,a_code as code,a_parentId as parentId';
+            $data   = Db::name($this->table)->where(['a_parentId' => $pid])->field($field)->order('a_code asc')->select();
             cache($cacheKey, $data, 86400);
         }
 

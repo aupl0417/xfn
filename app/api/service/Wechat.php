@@ -38,6 +38,7 @@ class Wechat extends Model {
      * */
     public function getAccessToken(){
         $cacheKey = md5('access_token');
+        cache($cacheKey, null);
         if(!$data = cache($cacheKey)){
             $url = $this->url . 'token?';
             $params = [
@@ -48,7 +49,6 @@ class Wechat extends Model {
 
             $result = curl_get($url . http_build_query($params));
             $result = json_decode($result, true);
-
             if(!isset($result['errcode'])){
                 $data = $result['access_token'];
                 cache($cacheKey, $data, $result['expires_in']);
@@ -116,5 +116,35 @@ class Wechat extends Model {
     public function getRandString($length = 32){
         $string = 'abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ23456789';
         return substr(str_shuffle($string), 0, $length);
+    }
+
+    public function qcode($id){
+        $token = $this->getAccessToken();
+        $url = 'https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=' . $token;
+        $params = [
+            'expire_seconds' => 604800,
+            'action_name'    => 'QR_SCENE',
+            'action_info'    => ['scene' => ['scene_id' => $id]],
+            'access_token' => $token,
+        ];
+        $result = curl_post($url, json_encode($params));
+        $result = json_decode($result, true);
+        if(!$result['ticket']){
+            return false;
+        }
+
+        $ticketUrl = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket='. urlencode($result['ticket']);
+        return $ticketUrl;
+    }
+
+
+    public function getUserInfo($accessToken, $openId){
+        $url = 'https://api.weixin.qq.com/cgi-bin/user/info?access_token=' . $accessToken . '&openid=' . $openId . '&lang=zh_CN';
+        $userInfo = curl_get($url);
+        $userInfo = json_decode($userInfo, true);
+//        if(!$userInfo || isset($userInfo['errcode'])){
+//            return false;
+//        }
+        return $userInfo;
     }
 }

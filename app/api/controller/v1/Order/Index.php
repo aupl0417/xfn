@@ -56,7 +56,7 @@ class Index extends Home {
         $data['trim'] = Db::name('car_trim')->where(['ct_id' => $data['trim']])->field('ct_name')->find()['ct_name'];
         $field = 'os_id as id,os_content as content,os_isUse as isUse';
         $data['scheme'] = Db::name('order_scheme')->where(['os_oid' => $data['id'], 'os_isDelete' => 0])->field($field)->order('os_id desc')->select();
-        $this->apiReturn(201, $data);
+        $this->apiReturn(200, $data);
     }
 
     public function edit(){

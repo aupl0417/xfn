@@ -34,6 +34,7 @@ class Brand extends Model
                 foreach($res as $key => $val){
                     $data[$val['initial']][] = $val;
                 }
+                unset($res, $val);
             }
             cache($cacheKey, $data, 86400);
         }
@@ -53,9 +54,10 @@ class Brand extends Model
                 foreach($list as $key => $val){
                     $data[$val['type']][] = $val;
                 }
-                unset($val);
+                unset($val, $list);
             }
         }
+
         return $data;
     }
 }

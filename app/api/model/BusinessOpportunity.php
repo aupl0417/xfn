@@ -25,7 +25,7 @@ class BusinessOpportunity extends Model
             return false;
         }
 
-        return Db::name($this->table)->field($field)->where(['s_id' => $id, 's_isDelete' => 0])->find();
+        return Db::name($this->table)->field($field)->where(['bo_id' => $id])->find();
     }
 
     /*

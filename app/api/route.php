@@ -14,12 +14,12 @@ Route::get('/',function(){
     return 'Hello,world!';
 });
 
-Route::get('adnews/v1/:id','api/ad.v1.News/read');      //查询
-Route::post('adnews/v1','api/ad.v1.News/add');          //新增
-Route::put('adnews/v1/:id','api/ad.v1.News/update');    //修改
-Route::delete('adnews/v1/:id','api/ad.v1.News/delete'); //删除
+//Route::get('adnews/v1/:id','api/ad.v1.News/read');      //查询
+//Route::post('adnews/v1','api/ad.v1.News/add');          //新增
+//Route::put('adnews/v1/:id','api/ad.v1.News/update');    //修改
+//Route::delete('adnews/v1/:id','api/ad.v1.News/delete'); //删除
 
-Route::get('activity_v1/:id','api/v1.Activity/index');      //查询
+//Route::get('activity_v1/:id','api/v1.Activity/index');      //查询
 //Route::post('adnews/v1','api/ad.v1.News/add');          //新增
 //Route::put('adnews/v1/:id','api/ad.v1.News/update');    //修改
 //Route::delete('adnews/v1/:id','api/ad.v1.News/delete'); //删除

@@ -25,7 +25,8 @@ class Upload extends Controller
 
     public function upload(){
         $file = request()->file('image');
-
+        !$file && $this->apiReturn(201, '', '请上传图片');
+        
         // 要上传图片的本地路径
         $filePath = $file->getRealPath();
         $ext      = pathinfo($file->getInfo('name'), PATHINFO_EXTENSION);  //后缀

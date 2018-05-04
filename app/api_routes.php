@@ -78,4 +78,6 @@ Route::post('public_v1/upload','api/v1.Publics.Upload/upload');
 Route::get('public_v1/token','api/v1.Publics.Upload/getToken');
 Route::get('common_v1/qcode','api/v1.Common/qcode');
 
+//微信扫码
 Route::post('car_v1/scan','api/v1.Screen.Scan/callback');
+Route::get('car_v1/scan/state','api/v1.Screen.Scan/state');

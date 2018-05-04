@@ -20,11 +20,6 @@ return [
 
     '__domain__' => [
         'api'   => 'api',
-        'www'   => 'index',
-        'wap'   => 'wap',
         'work'  => 'admin',
-        'seller'=> 'seller',
-        's'     => 'search',
-        'ad'    => 'ad',
     ],
 ];

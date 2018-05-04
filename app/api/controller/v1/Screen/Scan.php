@@ -16,10 +16,13 @@ use think\Exception;
 
 class Scan extends Base
 {
-    public function index(){
 
-    }
-
+    /**
+     * 微信扫码（包括关注）后，通过openid获取用户信息并保存到数据库
+     * @param id 商机记录ID
+     * @param openid 微信用户的openid
+     * @return json
+     * */
     public function callback(){
         (!isset($this->data['id']) || empty($this->data['id'])) && $this->apiReturn(201, '', '商机ID不能为空');
         (!isset($this->data['openid']) || empty($this->data['openid'])) && $this->apiReturn(201, '', 'OPENID不能为空');
@@ -70,6 +73,19 @@ class Scan extends Base
         }
     }
 
+    /**
+     * 扫码后，用于一直请求该商机记录，用户是否扫码成功
+     * @param id 商机ID
+     * @return json
+     * */
+    public function state(){
+        (!isset($this->data['id']) || empty($this->data['id'])) && $this->apiReturn(201, '', '商机ID不能为空');
 
+        $result = model('BusinessOpportunity')->getDataById($this->data['id'] + 0, 'bo_wid,bo_state');
+        !$result && $this->apiReturn(201);
+
+        (!$result['bo_wid'] || $result['bo_state'] == -1) && $this->apiReturn(201);
+        $this->apiReturn(200);
+    }
 
 }

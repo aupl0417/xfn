@@ -20,16 +20,12 @@ class BusinessOpportunity extends Model
      * 通过分销员ID来获取分销员数据
      * */
     public function getDataById($id, $field = '*'){
-        $cacheKey = md5('get_seller_by_id_' . $id . $field);
-        if(!$data = cache($cacheKey)){
-            if(empty($id) || !is_numeric($id)){
-                return false;
-            }
 
-            $data = Db::name($this->table)->field($field)->where(['s_id' => $id, 's_isDelete' => 0])->find();
-            cache($cacheKey, $data, 3600);
+        if(empty($id) || !is_numeric($id)){
+            return false;
         }
-        return $data;
+
+        return Db::name($this->table)->field($field)->where(['s_id' => $id, 's_isDelete' => 0])->find();
     }
 
     /*

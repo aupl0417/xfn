@@ -8,10 +8,8 @@
 
 namespace app\api\controller\v1;
 
-use Qiniu\Storage\BucketManager;
 use think\Controller;
 use think\Db;
-use Qiniu\Auth;
 class Common extends Home
 {
 
@@ -19,14 +17,6 @@ class Common extends Home
         $pid = isset($this->data['id']) || empty($this->data['id']) ? $this->data['id'] + 0 : 0;
         $data = model('Area')->getAreaList($pid);
         $this->apiReturn(200, $data);
-    }
-
-    public function upload(){
-        vendor('Qiniu.autoload');
-        $auth = new Auth(config('qiniu.accesskey'), config('qiniu.secretkey'));
-        $token = $auth->uploadToken(config('qiniu.bucket'));
-        $qn    = new BucketManager($auth);
-        dump($qn);
     }
     
     public function qcode(){

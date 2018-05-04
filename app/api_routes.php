@@ -10,10 +10,10 @@
 // +----------------------------------------------------------------------
 use think\Route;
 
-Route::get('/',function(){
-    return 'Hello,world!';
-});
-
+//Route::get('/',function(){
+//    return 'Hello,world!';
+//});
+Route::domain('work.' . config('url_domain_root'), 'admin');
 /*
  * 接口路由文件，接口专用
  * */
@@ -74,7 +74,8 @@ Route::post('work_v1/shop/add','api/v1.ShopManage.Index/add');
 
 //公共接口
 Route::post('common_v1/area','api/v1.Common/area');
-Route::post('common_v1/upload','api/v1.Common/upload');
+Route::post('public_v1/upload','api/v1.Publics.Upload/upload');
+Route::get('public_v1/token','api/v1.Publics.Upload/getToken');
 Route::get('common_v1/qcode','api/v1.Common/qcode');
 
 Route::post('car_v1/scan','api/v1.Screen.Scan/callback');

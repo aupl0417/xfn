@@ -30,7 +30,7 @@ class Order extends Model
     }
 
     public function getOrderData($where, $page = 1, $pageSize = 10){
-        $field = 'o_id as id,o_orderId as orderId,o_cid as cid,b_username as username,o_type as type,b_phone as phone,o_buystyle as buystyle,o_createTime as createTime,o_offerType as offerType,a.c_name as newCar,b.c_name as oldCar';
+        $field = 'o_id as id,o_orderId as orderId,o_cid as cid,b_username as username,o_type as type,b_phone as phone,o_buystyle as buystyle,o_createTime as createTime,o_offerType as offerType,a.c_name as newCar,b.c_name as oldCar,o_plateSellerId as plateSellerId';
         $join = [
             ['car c1', 'o_cid=c1.ac_id', 'left'],
             ['car c2', 'o_changeCarId=c2.ac_id', 'left'],
@@ -64,5 +64,21 @@ class Order extends Model
             ['shop', 'shop.s_id=seller.s_shopId', 'left']
         ];
         return Db::name($this->table)->where(['o_id' => $id])->join($join)->field($field)->find();
+    }
+
+    public function findOrderDetail($id, $field = '*'){
+        if(empty($id) || !is_numeric($id)){
+            return false;
+        }
+        $field = 'o_id as id,o_orderId as orderId,o_cid as cid,b_username as username,o_type as type,b_phone as phone,o_createTime as createTime,o_buystyle as buystyle,o_offerType as offerType,a.c_name as newCar,b.c_name as oldCar';
+        $join = [
+            ['car c1', 'o_cid=c1.ac_id', 'left'],
+            ['car c2', 'o_changeCarId=c2.ac_id', 'left'],
+            ['car_info a', 'c1.ac_cid=a.c_id', 'left'],
+            ['car_info b', 'c2.ac_cid=b.c_id', 'left'],
+            ['user', 'b_id=o_uid', 'left'],
+        ];
+        $data = Db::name($this->table)->where(['o_id' => $id])->join($join)->field($field)->find();
+        return $data;
     }
 }

@@ -56,13 +56,15 @@ class Car extends Home
      * */
     public function info($id){
         $model = model('Car');
-        $field = 'ac_id as id,c_name as name,c_image as image,c_introPrice as price,c_output as output,c_styleName as styleName,c_vehicleName as vehicleName,c_oilConsumption as oilConsuption,c_gearboxName as gearboxName,c_driveStyle as driveStyle,ac_soldPrice as soldPrice,ac_num as num';
+        $field = 'ac_id as id,c_id as carId,c_name as name,c_image as image,c_introPrice as price,c_output as output,c_styleName as styleName,c_vehicleName as vehicleName,c_oilConsumption as oilConsuption,c_gearboxName as gearboxName,c_driveStyle as driveStyle,ac_soldPrice as soldPrice,ac_num as num';
         $data  = $model->getCarById($id, $field);
         !$data && $this->apiReturn(201);
         if(isset($this->data['type']) && $this->data['type'] == 2){
             $data['price'] = $data['soldPrice'];//如果是二手车，则把销售价替换官方指导价
             unset($data['soldPrice']);
         }
+
+        $data['parameter'] = $model->getCarInfoById($data['carId']);
 
         $data['type'] = input('get.type');
         $this->apiReturn(200, $data);

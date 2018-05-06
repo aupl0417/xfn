@@ -41,6 +41,8 @@ Route::get('seller_v1/info','api/v1.Seller.Index/info');
 Route::get('seller_v1/lists','api/v1.Seller.Index/lists');
 Route::get('seller_v1/business','api/v1.Seller.Index/business');
 Route::get('seller_v1/message','api/v1.Seller.Index/message');
+Route::get('seller_v1/orderlist','api/v1.Seller.Index/orderList');
+Route::get('seller_v1/detail','api/v1.Seller.Index/detail');
 
 //后台接口
 

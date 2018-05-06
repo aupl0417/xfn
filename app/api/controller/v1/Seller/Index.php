@@ -126,4 +126,68 @@ class Index extends Home
         $this->apiReturn(200, ['count' => $count]);
     }
 
+    public function orderList(){
+        (!isset($this->data['userId']) || empty($this->data['userId'])) && $this->apiReturn(201, '', '分销员ID非法');
+        (!isset($this->data['type']) || is_null($this->data['type'])) && $this->apiReturn(201, '', '分销员类型非法');
+
+        $type   = $this->data['type']   + 0;
+        $userId = $this->data['userId'] + 0;
+        $keyword= isset($this->data['keyword']) ? trim($this->data['keyword']) : '';
+        $page   = input('page', 1, 'intval');
+
+        !in_array($type, [0, 1, 2]) && $this->apiReturn(201, '', '分销员类型非法');
+
+        $sellerModel = model('Seller');
+        $seller = $sellerModel->findSeller(['s_id' => $userId, 's_type' => $type], 's_shopId');//查找一条记录
+        !$seller && $this->apiReturn(201, '', '您不具有查看该门店报价列表的权限');
+
+        if($keyword){
+            if(checkPhone($keyword)){
+                $where['b_phone'] = $keyword;
+            }else{
+                if(substr_count($keyword, ' ') > 3){
+                    $ids = Db::name('car_info')->where('c_name', 'like', '%' . $keyword . '%')->join('car', 'ac_cid=c_id', 'left')->field('ac_id')->select();
+                    if($ids){
+                        $ids = array_column($ids, 'ac_id');
+                        $ids = implode(',', $ids);
+                        $where['o_cid'] = ['in', $ids];
+                    }
+                }else{
+                    $where['b_wechat'] = array('like', '%' . $keyword . '%');
+                }
+            }
+        }
+
+        $model = model('Order');
+        $data  = $model->getOrderData($where, $page);
+        $this->apiReturn(200, $data);
+    }
+
+    public function detail(){
+        (!isset($this->data['userId']) || empty($this->data['userId'])) && $this->apiReturn(201, '', '分销员ID非法');
+        (!isset($this->data['type']) || empty($this->data['type'])) && $this->apiReturn(201, '', '分销员类型非法');
+        (!isset($this->data['id']) || empty($this->data['id'])) && $this->apiReturn(201, '', '订单ID非法');
+
+        $orderId = $this->data['id']   + 0;
+        $type    = $this->data['type'] + 0;
+        $userId  = $this->data['userId'] + 0;
+
+        $sellerModel = model('Seller');
+        $seller = $sellerModel->findSeller(['s_id' => $userId, 's_type' => $type], 's_shopId');//查找一条记录
+        !$seller && $this->apiReturn(201, '', '您不具有查看该门报价单的权限');
+
+        $field = 'o_id as id,o_orderId as orderId,o_changeCarId as changeCarId,c_name as carName,o_carcolor as carcolor,o_trim as trim,b_username as username,b_phone as phone,o_registerAddr as registerAddr,seller.s_name as sellerName,shop.s_name as shopName,o_buystyle as buystyle,o_deliveryTime as deliveryTime,o_choice as choice,o_boutique as boutique,o_offerType as offerType,o_quotation as quotation,o_quotationRemark as quotationRemark,o_remark as remark,o_price as price,c_introPrice as introPrice';
+        $data = model('Order')->findOrder($this->data['id'] + 0, $field);
+        !$data && $this->apiReturn(201);
+        if($data['changeCarId']){
+            $carInfo = model('Car')->getCarById($data['changeCarId'], 'c_name as userCarName');
+            $data = array_merge($data, $carInfo);
+        }
+        $data['carcolor'] = Db::name('car_color')->where(['cc_id' => $data['carcolor']])->field('cc_name')->find()['cc_name'];
+        $data['trim'] = Db::name('car_trim')->where(['ct_id' => $data['trim']])->field('ct_name')->find()['ct_name'];
+        $field = 'os_id as id,os_content as content,os_isUse as isUse';
+        $data['scheme'] = Db::name('order_scheme')->where(['os_oid' => $data['id'], 'os_isDelete' => 0])->field($field)->order('os_id desc')->select();
+        $this->apiReturn(200, $data);
+    }
+
 }

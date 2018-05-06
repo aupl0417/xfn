@@ -69,4 +69,32 @@ class Car extends Model
         
         return $data;
     }
+
+    public function getCarInfoById($id){
+        if(empty($id) || !is_numeric($id)){
+            return false;
+        }
+
+        $cacheKey = md5('get_car_paremeter_by_car_info_id_' . $id);
+        if(!$data = cache($cacheKey)){
+            $field = 'cpd_type code,cpd_name name,cp_value value';
+            $where = [
+                'cp_cid' => $id,
+                'cpd_type' => array('in', [1, 2])
+            ];
+
+            $parameters = Db::name('car_parameter c')->field($field)->join('car_parameter_detail', 'cp_pid = cpd_id', 'left')->where($where)->select();
+            if($parameters){
+                $attr = Db::name('dictionary')->where(['d_typeid' => 8])->field('d_key as id,d_value as value')->order('d_sort asc')->select();
+                $attr = array_column($attr, 'value', 'id');
+                foreach($parameters as $key => $value){
+                    $data[$attr[$value['code']]][] = ['name' => $value['name'], 'value' => $value['value']];
+                }
+                cache($cacheKey, $data, 3600);
+				unset($attr, $parameters, $value);
+            }
+        }
+
+        return $data;
+    }
 }

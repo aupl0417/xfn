@@ -114,7 +114,7 @@ class Index extends Home {
         (!isset($this->data['id']) || empty($this->data['id'])) && $this->apiReturn(201, '', 'ID非法');
         $id = $this->data['id'] + 0;
 
-        $result = Db::name('seller')->where(['s_id' => $id])->update(['s_isDelete' => 1]);
+        $result = Db::name('seller')->where(['s_id' => $id])->update(['s_state' => -1]);
         $result === false && $this->apiReturn(201, '', '删除失败');
         $this->apiReturn(200, '', '删除成功');
     }

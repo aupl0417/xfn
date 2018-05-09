@@ -43,6 +43,10 @@ Route::get('seller_v1/business','api/v1.Seller.Index/business');
 Route::get('seller_v1/message','api/v1.Seller.Index/message');
 Route::get('seller_v1/orderlist','api/v1.Seller.Index/orderList');
 Route::get('seller_v1/detail','api/v1.Seller.Index/detail');
+Route::post('seller_v1/deal','api/v1.Seller.Index/deal');
+Route::post('seller_v1/change','api/v1.Seller.Index/change');
+Route::get('seller_v1/saleslist','api/v1.Seller.Index/salesList');
+Route::get('user_v1/info','api/v1.Seller.User/userInfo');
 
 //后台接口
 

@@ -65,12 +65,17 @@ class Seller extends Model
         return Db::name('seller')->where($where)->whereOr($whereOr)->field($field)->select();
     }
 
-    public function getSellerList($where, $field = '*', $page = 1, $pageSize = 10){
+    public function getSellerList($where, $field = '', $page = 1, $pageSize = 10){
+        if($field == '' || $field == '*'){
+            $field = 's_id as id,s_name as name,s_phone as phone,s_type as type,s_createTime as createTime';
+        }
         $data = Db::name($this->table)->where($where)->field($field)->page($page, $pageSize)->select();
         if($data){
             $typeArr = ['店长', '分销员', '销售员'];
             foreach($data as $key => &$value){
-                $value['type'] = $typeArr[$value['type']];
+                if(isset($value['type'])){
+                    $value['type'] = $typeArr[$value['type']];
+                }
                 $value['createTime'] = date('Y-m-d H:i:s', $value['createTime']);
             }
         }

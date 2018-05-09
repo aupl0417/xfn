@@ -75,16 +75,33 @@ class Index extends Home {
         (!isset($this->data['id']) || empty($this->data['id'])) && $this->apiReturn(201, '', '订单ID非法');
         (!isset($this->data['content']) || empty($this->data['content'])) && $this->apiReturn(201, '', '订单ID非法');
 
-        $data = [
-            'os_oid' => $this->data['id'] + 0,
-            'os_content' => htmlspecialchars(strip_tags(trim($this->data['content']))),
-            'os_createTime' => time(),
-            'os_updateTime' => time(),
-            'os_createId'   => $this->data['userId'] + 0,
-        ];
-        $result = Db::name('order_scheme')->insert($data);
-        !$result && $this->apiReturn(201, '', '添加方案失败');
-        $this->apiReturn(200, '', '添加方案成功');
+        Db::startTrans();
+        try{
+            $data = [
+                'os_oid' => $this->data['id'] + 0,
+                'os_content' => htmlspecialchars(strip_tags(trim($this->data['content']))),
+                'os_createTime' => time(),
+                'os_updateTime' => time(),
+                'os_createId'   => $this->data['userId'] + 0,
+            ];
+            $result = Db::name('order_scheme')->insert($data);
+            if(!$result){
+                throw new Exception('添加方案失败');
+            }
+
+            $result = Db::name('car_order')->where(['o_id' => $data['os_oid']])->update(['o_state' => 2]);
+            if($result === false){
+                throw new Exception('更新订单状态失败');
+            }
+
+            Db::commit();
+            $this->apiReturn(200, '', '添加方案成功1');
+        }catch (Exception $e){
+            Db::rollback();
+            $this->apiReturn(201, '', '添加方案失败');
+        }
+
+
     }
 
     /**

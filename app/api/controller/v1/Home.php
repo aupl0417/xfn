@@ -126,4 +126,12 @@ class Home extends Controller {
         }
     }
 
+    protected function checkAuth($userId, $type){
+        $seller      = model('Seller')->findSeller(['s_id' => $userId, 's_type' => $type], 's_id');//查找一条记录
+        if(!$seller){
+            return false;
+        }
+        return true;
+    }
+
 }

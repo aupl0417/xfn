@@ -20,8 +20,13 @@ class Buyer extends Model
         if(empty($id) || !is_numeric($id)){
             return false;
         }
+        $cacheKey = md5('get_buyer_by_id_' . $id . $field);
+        if(!$data = cache($cacheKey)){
+            $data = Db::name($this->table)->field($field)->where(['b_id' => $id])->find();
+            cache($cacheKey, $data, 3600);
+        }
 
-        return Db::name($this->table)->field($field)->where(['b_id' => $id])->find();
+        return $data;
     }
     
 }

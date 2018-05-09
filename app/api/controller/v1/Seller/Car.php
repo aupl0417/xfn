@@ -106,7 +106,7 @@ class Car extends Home
             $data['o_uid']        = $userId;
             $data['o_orderId']    = makeOrder();
             $data['o_createTime'] = time();
-            $data['o_state']      = -1;
+            $data['o_state']      = 0;
 
             $result = Db::name('car_order')->insert($data);
             if(!$result){
@@ -152,11 +152,11 @@ class Car extends Home
         }
 
         $data['o_updateTime'] = time();
-        $data['o_state'] = 0;
+        $data['o_state'] = 1;
         unset($data['o_type']);
         $result = Db::name('car_order')->update($data);
-        $result === false && $this->apiReturn(201, '', '提交报价失败');
-        $this->apiReturn(200, '', '提交成功');
+        $result === false && $this->apiReturn(201, '', '报价申请失败');
+        $this->apiReturn(200, '', '报价申请成功');
     }
 
 }

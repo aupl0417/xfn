@@ -60,4 +60,12 @@ class User extends Home
         !$data && $this->apiReturn(201);
         $this->apiReturn(200, $data);
     }
+
+    public function userInfo(){
+        (!isset($this->data['userId']) || empty($this->data['userId'])) && $this->apiReturn(201, '', '客户ID非法');
+
+        $userId = $this->data['userId'] + 0;
+        $data   = model('Buyer')->getBuyerById($userId);
+        $this->apiReturn(201, $data);
+    }
 }

@@ -65,7 +65,15 @@ class User extends Home
         (!isset($this->data['userId']) || empty($this->data['userId'])) && $this->apiReturn(201, '', '客户ID非法');
 
         $userId = $this->data['userId'] + 0;
-        $data   = model('Buyer')->getBuyerById($userId);
+        $buyer   = model('Buyer')->getBuyerById($userId);
+        !$buyer && $this->apiReturn(201, '', '买家不存在');
+
+        foreach($buyer as $key => $value){
+            $arr = explode('_', $key);
+            $k = end($arr);
+            $data[$k] = $value;
+        }
+        unset($key, $k, $value);
         $this->apiReturn(201, $data);
     }
 }

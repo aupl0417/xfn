@@ -75,7 +75,7 @@ Route::get('work_v1/car','api/v1.CarManage.Index/index');
 Route::post('work_v1/car/add','api/v1.CarManage.Index/add');
 
 //门店管理
-Route::get('work_v1/shop','api/v1.ShopManage.Index/index');
+Route::get('work_v1/shop','api/v1.ShopManage.Index/index'); 
 Route::post('work_v1/shop/add','api/v1.ShopManage.Index/add');
 
 //公共接口
